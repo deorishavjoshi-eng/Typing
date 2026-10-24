@@ -1,0 +1,6 @@
+{
+  "name": "Typing Mock",
+  "description": "Exam-oriented typing test app for SSC CGL, CHSL, RRB NTPC, DSSSB, KVS, NVS with category cutoffs, 40+ unique mocks, audio hall noise, and admin management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

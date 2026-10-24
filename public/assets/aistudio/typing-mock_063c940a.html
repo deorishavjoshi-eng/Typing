@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typing Mock</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f6fb;color:#1c2540}
+  .hidden{display:none!important}
+  button{font-family:inherit}
+
+  /* ---------- HOME / PASSAGE LIST ---------- */
+  .hero{background:#1e3a6e;color:#fff;padding:16px 14px 12px}
+  .hero h1{margin:0 0 6px;font-size:20px;color:#fff}
+  .hero p{margin:0 0 12px;font-size:12px;line-height:1.5;color:#d7defa}
+  .tabs{display:flex;flex-wrap:wrap;gap:8px}
+  .tab{background:#2d4a85;color:#fff;border:1px solid #4a66a8;border-radius:16px;padding:6px 12px;font-size:11px;cursor:pointer}
+  .tab.on{background:#ffcb1f;color:#1e2a4a;border-color:#ffcb1f;font-weight:bold}
+  .body{padding:14px;max-width:1100px;margin:0 auto}
+  .body h2{margin:6px 0 4px;font-size:18px;color:#1e2a4a}
+  .sub{font-size:12px;color:#556;line-height:1.5;margin-bottom:10px}
+  .lvchips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+  .lc{border:1.5px solid;border-radius:16px;padding:5px 10px;font-size:11px;font-weight:bold;cursor:pointer;background:#fff}
+  .lc.c1{color:#0e9a46;border-color:#0e9a46}.lc.c2{color:#e08a12;border-color:#e08a12}
+  .lc.c3{color:#d02a33;border-color:#d02a33}.lc.c4{color:#6b3fc9;border-color:#6b3fc9}
+  .lc.act.c1{background:#0e9a46;color:#fff}.lc.act.c2{background:#e08a12;color:#fff}
+  .lc.act.c3{background:#d02a33;color:#fff}.lc.act.c4{background:#6b3fc9;color:#fff}
+  .lvh{font-size:16px;font-weight:bold;margin:18px 0 2px}
+  .lvh small{font-weight:normal;color:#667;font-size:11px;margin-left:6px}
+  .lvd{font-size:11px;color:#667;margin-bottom:10px}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px}
+  .pc{background:#fff;border:1px solid #e3e6f0;border-radius:10px;padding:10px;font-size:11px;display:flex;flex-direction:column;gap:6px}
+  .pt{font-weight:bold;font-size:12px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .badge{font-size:9px;padding:2px 7px;border-radius:9px;color:#fff}
+  .b1{background:#0e9a46}.b2{background:#e08a12}.b3{background:#d02a33}.b4{background:#6b3fc9}
+  .wchip{background:#e8ebff;color:#3b45a8;font-size:10px;padding:2px 8px;border-radius:9px;align-self:flex-start}
+  .ex{color:#555;line-height:1.4;min-height:44px}
+  .src{font-size:9.5px;color:#888}
+  .sbtn{background:#1e3a6e;color:#fff;border:0;border-radius:5px;padding:7px 12px;font-size:11px;font-weight:bold;cursor:pointer;align-self:flex-start}
+  .empty{background:#fff;border:1px dashed #bbc;border-radius:10px;padding:24px;text-align:center;color:#667;font-size:13px}
+  .infocard{background:#fff;border:1px solid #e3e6f0;border-radius:10px;padding:14px;margin-bottom:10px;font-size:13px;line-height:1.6}
+  .infocard h3{margin:0 0 6px;font-size:14px;color:#1e3a6e}
+  .infocard ul{margin:0;padding-left:18px}
+  table{width:100%;border-collapse:collapse;background:#fff;font-size:12px;border-radius:8px;overflow:hidden}
+  th,td{padding:8px;border-bottom:1px solid #eee;text-align:left}
+  th{background:#eef0fb}
+  .ta{width:100%;height:160px;border:1px solid #aab;border-radius:6px;padding:10px;font-size:15px;font-weight:bold;font-family:inherit;margin:10px 0}
+  select.sm,input.sm{padding:8px;border:1px solid #ccd;border-radius:6px;font-size:13px;background:#fff}
+
+  /* ---------- START PAGE ---------- */
+  .topbar{background:#1e3a6e;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:12px}
+  .topbar b{font-size:13px}
+  .topbar a{color:#fff;cursor:pointer;text-decoration:underline}
+  .card{background:#fff;margin:14px;padding:18px;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.08);max-width:1000px}
+  @media(min-width:1040px){.card{margin:14px auto}}
+  h1.pg{font-size:19px;margin:0 0 10px;color:#1e2a4a}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .chip{background:#e8ebff;color:#3b45a8;font-size:11px;padding:4px 10px;border-radius:12px}
+  .cols{display:flex;gap:18px;flex-wrap:wrap}
+  .left{flex:1 1 340px}
+  .right{flex:1 1 300px}
+  label.t{display:block;font-size:12px;font-weight:bold;margin:12px 0 5px}
+  select{width:100%;padding:10px;border:1px solid #ccd;border-radius:6px;background:#eee;font-size:13px}
+  .box{border:1px solid #dde;border-radius:8px;padding:10px;margin-top:10px;font-size:12px}
+  .box small{display:block;color:#667;margin:3px 0 6px;font-size:11px}
+  .row{display:flex;align-items:center;gap:8px}
+  .row input[type=range]{flex:1}
+  .btn-sm{border:1px solid #1e3a6e;background:#fff;color:#1e3a6e;border-radius:5px;padding:5px 9px;font-size:11px;cursor:pointer}
+  .modes{display:flex;gap:10px;margin-top:6px}
+  .mode{flex:1;border:1px solid #ccd;border-radius:8px;padding:10px;font-size:12px;cursor:pointer}
+  .mode.sel{border:2px solid #1e3a6e}
+  .mode small{display:block;color:#667;font-size:10.5px;margin-top:4px}
+  .start{background:#1e3a6e;color:#fff;border:0;border-radius:6px;padding:12px 18px;font-weight:bold;font-size:14px;cursor:pointer;margin-top:16px}
+  .logged{font-size:11px;color:#556;margin-left:8px}
+  .side{border:1px solid #e3e6f0;border-radius:10px;padding:12px;font-size:12px;line-height:1.55;margin-bottom:12px}
+  .side h3{margin:0 0 6px;font-size:13px}
+  .side ol{margin:0;padding-left:18px}
+  .side li{margin-bottom:6px}
+
+  /* ---------- TEST PAGE ---------- */
+  #test{background:#fff;min-height:100vh}
+  .exambar{background:#2a3c63;color:#fff;font-size:10px;padding:3px 8px;display:flex;justify-content:space-between}
+  .head{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 20px 4px}
+  .head .lang{font-size:11px}
+  .head .lang span{margin-right:8px;text-decoration:underline;cursor:pointer}
+  .head .tl{font-size:12px;font-weight:bold;margin-top:18px}
+  .cand{text-align:center;width:104px;font-size:10px;font-weight:bold}
+  .cand .pic{width:104px;height:96px;border:1px solid #bbb;background:#f0f0f6;display:flex;align-items:center;justify-content:center;font-size:42px}
+  .kbbar{background:#4f5ee6;color:#fff;font-size:11px;padding:10px 14px;margin:8px 20px;display:flex;gap:30px;border:1px solid #3a46c0}
+  #passage{margin:10px 20px 0;border:1px solid #aab;border-radius:3px;padding:12px 14px;font-size:15px;font-weight:bold;line-height:1.75;height:150px;overflow-y:scroll;-webkit-overflow-scrolling:touch;user-select:none;-webkit-user-select:none;background:#fff}
+  #passage::-webkit-scrollbar{width:10px}
+  #passage::-webkit-scrollbar-track{background:#e6e8f2}
+  #passage::-webkit-scrollbar-thumb{background:#7d86c9;border-radius:5px}
+  #typed{display:block;margin:14px 20px 0;width:calc(100% - 40px);height:170px;border:1px solid #aab;padding:10px;font-size:15px;font-weight:bold;line-height:1.6;resize:none;font-family:inherit}
+  .submitrow{text-align:right;padding:10px 20px 20px}
+  .submit{background:#4f5ee6;color:#fff;border:0;border-radius:4px;padding:8px 24px;font-size:12px;font-weight:bold;cursor:pointer}
+  .keys{font-size:11px;color:#667;padding:0 20px}
+
+  /* ---------- RESULT + POPUP ---------- */
+  .pass{color:#0a8a3a;font-weight:bold}.fail{color:#c0262d;font-weight:bold}
+  .rbody{max-width:1000px;margin:0 auto;padding:10px 12px 30px}
+  .rhero{border-radius:14px;padding:22px 16px;color:#fff;display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:linear-gradient(135deg,#b3141b,#ef4444)}
+  .rhero.ok{background:linear-gradient(135deg,#0b7a3a,#22b358)}
+  .ring{width:112px;height:112px;border-radius:50%;border:9px solid rgba(255,255,255,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;text-align:center}
+  .ring b{font-size:30px;line-height:1}.ring small{font-size:9px;opacity:.9;margin-top:3px}
+  .rtxt{flex:1 1 220px}
+  .rtxt .k{font-size:10px;letter-spacing:1px;font-weight:bold;opacity:.9}
+  .rtxt h2{margin:6px 0;font-size:22px;color:#fff}
+  .rtxt .s{font-size:12px;opacity:.95;line-height:1.4}
+  .pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .pills span{background:rgba(255,255,255,.2);border-radius:12px;padding:4px 9px;font-size:10px}
+  .scards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+  .sc{background:#fff;border:1px solid #e3e6f0;border-radius:12px;padding:12px;font-size:11px;color:#556}
+  .sc .h{font-size:10px;font-weight:bold;color:#445;letter-spacing:.5px}
+  .sc .v{font-size:26px;font-weight:bold;color:#1e2a4a;margin:6px 0 2px}
+  .bar{height:6px;background:#e6e8f2;border-radius:3px;margin:8px 0 4px;overflow:hidden}
+  .bar i{display:block;height:100%;background:#2f45d8}
+  .bar.g i{background:#9aa0b5}.bar.k i{background:#1e2a4a}
+  .panel{background:#fff;border:1px solid #e3e6f0;border-radius:12px;padding:14px;margin-bottom:12px}
+  .panel h3{margin:0 0 10px;font-size:14px;color:#1e2a4a}
+  .kv{display:grid;grid-template-columns:1fr 1fr;border:1px solid #e3e6f0;border-radius:8px;font-size:11px}
+  .kv div{padding:8px;border-bottom:1px solid #eef0f6;display:flex;justify-content:space-between;gap:6px}
+  .kv div b{color:#1e2a4a}
+  .ok2{color:#0a8a3a;font-weight:bold}.no2{color:#d02a33;font-weight:bold}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:8px}
+  .tile{border:1px solid #f1b4b4;background:#fdeeee;border-radius:8px;padding:8px 2px;text-align:center;font-size:11px;font-weight:bold}
+  .tile small{display:block;font-weight:normal;color:#777;font-size:9px;margin-top:3px}
+  .tile.p{border-color:#a8dcb8;background:#eaf8ef}
+  .tile.sel{outline:2px solid #ffcb1f}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+  .modal{position:fixed;inset:0;background:rgba(10,15,40,.6);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+  .pop{background:#fff;border-radius:18px;padding:28px 22px;max-width:360px;width:100%;text-align:center;animation:pop .45s cubic-bezier(.2,1.4,.4,1);position:relative;overflow:hidden}
+  .pop .big{font-size:56px}
+  .pop h2{margin:6px 0;color:#1e3a6e;font-size:24px}
+  .pop p{color:#445;font-size:14px;margin:6px 0 16px}
+  @keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+  .conf{position:absolute;top:-20px;font-size:20px;animation:fall 2.5s linear forwards}
+  @keyframes fall{to{transform:translateY(420px) rotate(360deg);opacity:.2}}
+</style>
+</head>
+<body>
+
+<!-- ================= HOME (PASSAGE LIST + TABS) ================= -->
+<div id="home">
+  <div class="hero">
+    <h1>Typing Mock</h1>
+    <p>Practise exam-style typing passages, level by level. Pick a tab for your exam, choose a passage and press Start test.</p>
+    <div class="tabs" id="tabs"></div>
+  </div>
+  <div class="body" id="tabBody"></div>
+</div>
+
+<!-- ================= START PAGE ================= -->
+<div id="start" class="hidden">
+  <div class="topbar"><b>Typing Mock</b><a id="backBtn">← All passages</a></div>
+  <div class="card">
+    <h1 class="pg" id="sTitle">Passage</h1>
+    <div class="chips" id="sChips"></div>
+    <div class="cols">
+      <div class="left">
+        <label class="t">Exam</label>
+        <select id="exam"></select>
+        <label class="t">Your category</label>
+        <select id="cat"><option value="UR">UR</option><option value="OBC">OBC/EWS</option><option value="SC">SC/ST</option><option value="PwD">PwD</option></select>
+        <label class="t">Post you are aiming for</label>
+        <select id="post"></select>
+
+        <div class="box">
+          <label class="row"><input type="checkbox" id="noise"> <b>Exam-hall noise</b></label>
+          <small>Many candidates typing around you, like the real exam centre. Use headphones or speakers.</small>
+          <div class="row">Volume <input type="range" id="vol" min="0" max="100" value="55"><button class="btn-sm" id="tsound" type="button">Test sound</button></div>
+        </div>
+        <div class="box">
+          <label class="row"><input type="checkbox" id="ksound"> <b>My key sound</b></label>
+          <small>A click for every key you press.</small>
+        </div>
+
+        <div class="box">
+          <b>Mode</b>
+          <div class="modes">
+            <div class="mode sel" data-m="real"><label class="row"><input type="radio" name="mode" value="real" checked> <b>Real exam</b></label><small>Exactly like the exam – full Backspace, no highlight, fixed time</small></div>
+            <div class="mode" data-m="practice"><label class="row"><input type="radio" name="mode" value="practice"> <b>Practice</b></label><small>Choose your own time</small></div>
+          </div>
+          <div id="pbox" class="hidden" style="margin-top:10px">Practice time:
+            <select id="pmins" style="width:auto;display:inline-block;padding:6px"><option value="5">5 minutes</option><option value="10">10 minutes</option><option value="15" selected>15 minutes</option><option value="20">20 minutes</option></select>
+          </div>
+        </div>
+        <button class="start" id="startBtn">Start Test ▸</button><span class="logged">Logged in as DEO Candidate</span>
+      </div>
+
+      <div class="right">
+        <div class="side"><h3>Instructions</h3>
+          <ol>
+            <li>The timer starts when you press <b>Start Test</b>; the test is submitted automatically when time is over.</li>
+            <li>Type the passage exactly as given – capitals, punctuation and numbers included – with one space after a punctuation mark.</li>
+            <li>The passage is one paragraph: Enter and Tab do not work. Copy-paste is not allowed. Backspace and the arrow keys work as in the exam.</li>
+            <li>You cannot type more than 2000 key depressions. If you finish early, read your text, correct mistakes and press <b>Submit</b>.</li>
+            <li>Full mistake: word left out, wrong / misspelt word, extra or repeated word, incomplete word. (Half mistakes are not scored separately in this mock.)</li>
+          </ol>
+        </div>
+        <div class="side"><h3>Mistakes allowed</h3><div id="limitsBox"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= TEST PAGE ================= -->
+<div id="test" class="hidden">
+  <div class="exambar"><span id="tExam">Typing</span><span>🔊 Hall noise &nbsp; ⓘ Instructions</span></div>
+  <div class="head">
+    <div>
+      <div class="lang"><span>English</span><span>Hindi</span></div>
+      <div class="lang" style="margin-top:8px;color:#555">Selected Language : &nbsp; <span id="tLang" style="text-decoration:none">English (US)</span></div>
+      <div class="lang" style="margin-top:4px;color:#555">v1.00.04</div>
+    </div>
+    <div class="tl">Time Left : <span id="timer">15:00</span></div>
+    <div class="cand"><div class="pic">👤</div>DEO Candidate</div>
+  </div>
+  <div class="kbbar"><span>Keyboard Layout :Inscript</span><span id="kbLang">Language:English</span></div>
+  <div id="passage"></div>
+  <textarea id="typed" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+  <div class="keys">Key depressions: <span id="kd">0</span> / 2000</div>
+  <div class="submitrow"><button class="submit" id="submitBtn">Submit</button></div>
+</div>
+
+<!-- ================= RESULT ================= -->
+<div id="result" class="hidden">
+  <div class="topbar"><b>Typing Mock</b><span>Result</span></div>
+  <div class="rbody" id="resBody"></div>
+</div>
+
+<!-- ================= CONGRATULATIONS POPUP ================= -->
+<div id="congrats" class="modal hidden">
+  <div class="pop" id="popBox">
+    <div class="big">🏆</div>
+    <h2 id="popTitle">Congratulations!</h2>
+    <p id="popMsg"></p>
+    <button class="start" style="margin:0" onclick="document.getElementById('congrats').classList.add('hidden')">View Result</button>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const words = s => s.trim().split(/\s+/).filter(Boolean);
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ============================================================
+   DATA – add more passages here. Fields:
+   id, level (1 Easy · 2 Medium · 3 Hard · 4 Advanced), lang ('en' | 'hi'),
+   exams (which tabs show it), title, text
+   ============================================================ */
+const ENG = ['cgl','ldc','deo','ntpc','hcm','kvs'];
+const PASSAGES = [
+ {id:1, level:1, lang:'en', exams:ENG, title:'The Honest Woodcutter',
+  text:"Once upon a time, a poor woodcutter lived near a deep forest with his wife and two sons. Every morning he took his axe and walked to the river to cut dry wood. One day, while he was working, his axe slipped from his hand and fell into the water. He sat down and began to cry, because it was the only tool he had. Suddenly, a kind spirit rose from the river and asked him why he was sad. The woodcutter told the truth. The spirit brought a golden axe, but he said it was not his. Then it brought a silver axe, and he refused again. At last it showed his old iron axe, and he smiled. Pleased with his honesty, the spirit gave him all three axes as a gift."},
+ {id:2, level:1, lang:'en', exams:ENG, title:'A Day at the Village Fair',
+  text:"Every year, in the month of November, a big fair is held in our village. People from nearby places come to buy and sell things. There are shops of sweets, toys, clothes and bangles. Children enjoy the giant wheel and the merry-go-round. Farmers bring their best cows and buffaloes to show to the visitors. In the evening, a group of folk singers sings songs about love and brave kings. My father buys me a small drum, and my mother buys a new lamp for our house. When we return home, we are tired but very happy. I always wait for the fair all through the year."},
+ {id:3, level:1, lang:'en', exams:ENG, title:'My Favourite Teacher',
+  text:"A teacher is called the builder of the nation. The profession of teaching is one of the noblest in the world. My favourite teacher is Mrs. Sharma, who taught me English in school. She always came to class on time and explained every lesson with simple examples. When a student could not understand a topic, she never got angry. She would explain it again and again until everyone was clear. She also told us stories of great people and taught us to speak the truth. Even today, whenever I face a problem, I remember her kind words. I am thankful to her for all that I have learnt."},
+ {id:4, level:2, lang:'en', exams:ENG, title:'The Importance of Sleep',
+  text:"Doctors say that an adult needs seven to nine hours of sleep every night. During sleep, the body repairs its cells, the brain stores new information, and the heart gets some rest. A person who sleeps less than six hours regularly may feel tired, angry and unable to concentrate. Over time, lack of sleep can also raise the risk of diabetes, high blood pressure and weak memory. Students, in particular, should not sit awake all night before an examination, because a rested mind recalls facts much faster. To sleep well, one should avoid mobile phones before bed, eat a light dinner, and go to bed at the same time every day."},
+ {id:5, level:2, lang:'en', exams:ENG, title:'Public Libraries',
+  text:"A public library is a place where everyone, rich or poor, can read books free of cost. In a country like India, where many families cannot afford to buy newspapers and magazines, libraries play a very important role. They offer books on history, science, art, law and literature, and many of them now provide computers with internet facilities. Children's sections hold picture books, while the reference section has dictionaries and encyclopaedias for older students. A good librarian knows the reader's interests and suggests the right book at the right time. Therefore, the government should open more libraries in villages and small towns, and should also keep the existing ones well-maintained."},
+ {id:6, level:3, lang:'en', exams:['cgl','deo','ntpc'], title:'Indian Railways',
+  text:"The first passenger train in India ran on 16 April 1853, from Bombay (now Mumbai) to Thane, covering a distance of about 34 kilometres. Since then, the railway network has grown into one of the largest in the world. Today, thousands of passenger trains run every day, carrying millions of people to cities, towns and villages across the country. The Railways also transport coal, food grains, fertiliser, steel and petroleum, and so they are often called the lifeline of the nation. In recent years, new Vande Bharat trains, better stations and electrification of tracks have improved speed, safety and comfort. However, crowded general coaches and delays in winter fog remain a worry for many travellers."},
+ {id:7, level:3, lang:'en', exams:['cgl','deo','ldc'], title:'The Indian Monsoon',
+  text:"The south-west monsoon usually reaches Kerala around the first week of June and then moves slowly across the whole country by the middle of July. It brings about 75% of India's annual rainfall, and, therefore, it is of great importance to farmers who grow rice, cotton, sugarcane and pulses. When the rains are good, the reservoirs fill up, the markets are busy, and the prices of vegetables stay low. When they fail, drought hits the villages, and the government must give relief to affected families. Scientists in the Meteorological Department now use satellites and computers to forecast the rainfall, but sudden floods and cloudbursts still catch people by surprise."},
+ {id:8, level:4, lang:'en', exams:['cgl','deo'], title:'Unified Payments Interface',
+  text:"Unified Payments Interface (UPI), developed by the National Payments Corporation of India (NPCI) and launched in 2016, has changed the way Indians send and receive money in their daily lives. With a simple Virtual Payment Address (VPA) such as name@bank, a customer can transfer funds instantly, 24x7, from one bank account to another without sharing account numbers or IFSC codes. Merchants display a Quick Response (QR) code, and even a vegetable seller on a footpath can now accept digital payments. Monthly UPI transactions have crossed 10 billion, and the system has been linked with payment networks in countries such as Singapore, the UAE and France. Experts say that the success of UPI rests on three pillars: open architecture, low cost and strong public support. However, challenges remain, including fraud, network outages and the need for digital literacy in rural areas. The government and banks are therefore running awareness campaigns and improving security so that every citizen can use digital payments with confidence. Small shopkeepers say that UPI has reduced the need to carry cash and to give change, while students use it to pay fees, buy books and split bills with friends. Banks, on their part, have simplified the process of registering a mobile number and creating a secret PIN. Several mobile applications now offer features such as bill reminders, instant refunds and spending summaries, which help families plan their monthly budgets in a better way. In the coming years, offline payments, voice-based commands in regional languages and credit facilities on UPI are expected to bring even more people into the formal financial system, thereby strengthening the Indian economy."},
+ {id:9, level:4, lang:'en', exams:['cgl','deo'], title:'Space Exploration & ISRO',
+  text:"The Indian Space Research Organisation (ISRO), founded in 1969, has grown from a small team launching sounding rockets into one of the most respected space agencies in the world. Its Mars Orbiter Mission (2013-14) was completed at a cost of roughly 450 crore rupees, which was lower than the budget of many science-fiction films. In August 2023, Chandrayaan-3 landed near the lunar south pole, and India became the 4th country to soft-land on the Moon. ISRO also earns revenue by launching foreign satellites at 30%-50% lower prices than its competitors. Its future plans include the Gaganyaan crewed mission, a space station of its own & more Earth-observation satellites. \"Space is not a luxury,\" scientists often say; \"it is a tool for farming, weather, communication & safety.\""},
+ {id:101, level:1, lang:'hi', exams:['hindi'], title:'स्वच्छ भारत',
+  text:"स्वच्छता हमारे जीवन का एक महत्वपूर्ण अंग है। जहाँ सफाई होती है, वहाँ बीमारियाँ कम होती हैं और लोग स्वस्थ रहते हैं। हमें अपने घर, गली और विद्यालय को साफ रखना चाहिए। कूड़ा हमेशा कूड़ेदान में ही डालना चाहिए। यदि सभी लोग मिलकर प्रयास करें, तो हमारा देश बहुत सुंदर बन सकता है।"},
+ {id:102, level:2, lang:'hi', exams:['hindi'], title:'योग और स्वास्थ्य',
+  text:"योग भारत की प्राचीन परंपरा की एक अनमोल देन है। प्रतिदिन सुबह कुछ समय योग करने से शरीर मजबूत बनता है और मन शांत रहता है। इससे तनाव कम होता है तथा एकाग्रता बढ़ती है। आज पूरी दुनिया में लोग योग को अपना रहे हैं। इक्कीस जून को अंतरराष्ट्रीय योग दिवस मनाया जाता है।"}
+];
+
+const LV = {1:{n:'Easy',d:'Short, common words and few capitals or numbers. Start here.'},
+            2:{n:'Medium',d:'Longer words with some capitals, commas and numbers.'},
+            3:{n:'Hard',d:'More capitals, numbers, brackets and punctuation.'},
+            4:{n:'Advanced',d:'Long passages with symbols such as @, &, % and quotation marks.'}};
+
+/* mock exam settings – edit freely */
+const L = (ur,obc,sc,pwd) => ({UR:ur,OBC:obc,SC:sc,PwD:pwd});
+const EXAMS = {
+ cgl:{name:'SSC CGL', mins:15, posts:[
+   {id:'dest', label:'DEST posts – Tax Assistant (CBIC, CBDT), UDC/SSA (Central Bureau)', limits:L(5,7,7,10)},
+   {id:'cpt',  label:'CPT posts', limits:L(5,7,7,10)},
+   {id:'other',label:'Other CGL posts', limits:L(20,25,30,30)}]},
+ ldc:{name:'CHSL LDC/JSA', mins:15, posts:[{id:'all',label:'LDC / JSA posts (mock limits)', limits:L(10,12,15,20)}]},
+ deo:{name:'CHSL DEO', mins:15, posts:[{id:'all',label:'Data Entry Operator posts (mock limits)', limits:L(5,7,7,10)}]},
+ ntpc:{name:'RRB NTPC', mins:15, posts:[{id:'all',label:'Clerk / Typist posts (mock limits)', limits:L(10,12,15,20)}]},
+ hcm:{name:'HCM / DSSSB', mins:15, posts:[{id:'all',label:'All typing posts (mock limits)', limits:L(10,12,15,20)}]},
+ kvs:{name:'KVS / NVS JSA', mins:15, posts:[{id:'all',label:'Junior Secretariat Assistant (mock limits)', limits:L(10,12,15,20)}]},
+ hindi:{name:'Hindi Typing', mins:15, posts:[{id:'all',label:'Hindi typing posts (mock limits)', limits:L(10,12,15,20)}]}
+};
+
+/* ============================================================
+   HOME TABS
+   ============================================================ */
+/* speed needed (key depressions per hour) – mock values, check your notification */
+EXAMS.cgl.posts[0].kdph = 8000; EXAMS.cgl.posts[1].kdph = 8000;
+EXAMS.ldc.posts[0].kdph = 10500; EXAMS.ldc.posts[0].limits.UR = 7;
+EXAMS.deo.posts[0].kdph = 8000;
+EXAMS.ntpc.posts[0].kdph = 9000; EXAMS.hcm.posts[0].kdph = 10500; EXAMS.kvs.posts[0].kdph = 10500;
+
+const TABS = [
+ {id:'home',label:'Typing home'},{id:'learn',label:'Learn'},{id:'practice',label:'Practice'},
+ {id:'cgl',label:'SSC CGL'},{id:'ldc',label:'CHSL LDC/JSA'},{id:'deo',label:'CHSL DEO'},
+ {id:'ntpc',label:'RRB NTPC'},{id:'hcm',label:'HCM / DSSSB'},{id:'kvs',label:'KVS / NVS JSA'},
+ {id:'results',label:'My results'},{id:'hindi',label:'हिंदी Typing'},{id:'steno',label:'Steno Dictation'}
+];
+let curTab = 'home', curLevel = 0, startMode = 'real', startExam = 'cgl';
+
+function buildTabs(){
+  $('tabs').innerHTML = TABS.map(t => `<button class="tab ${t.id===curTab?'on':''}" data-t="${t.id}">${t.label}</button>`).join('');
+  $('tabs').querySelectorAll('.tab').forEach(b => b.onclick = () => { curTab = b.dataset.t; curLevel = 0; showTab(); });
+}
+
+function passageCard(p){
+  const w = words(p.text).length, ex = p.text.slice(0, 70) + '…';
+  return `<div class="pc"><div class="pt">Passage ${p.id} <span class="badge b${p.level}">${LV[p.level].n}</span></div>
+    <span class="wchip">${w} words</span><div class="ex">${esc(ex)}</div>
+    <div class="src">Sample mock passage</div>
+    <button class="sbtn" data-p="${p.id}">Start test</button></div>`;
+}
+
+function listView(list, title, sub){
+  let h = `<h2>${title}</h2><div class="sub">${sub}</div>`;
+  if(!list.length) return h + `<div class="empty">No passages here yet. Add some in the PASSAGES list inside the script.</div>`;
+  h += '<div class="lvchips">' + [1,2,3,4].map(l => {
+    const n = list.filter(p => p.level===l).length;
+    return n ? `<span class="lc c${l} ${curLevel===l?'act':''}" data-l="${l}">Level ${l} – ${LV[l].n} · ${n}</span>` : '';
+  }).join('') + (curLevel ? `<span class="lc c1" data-l="0" style="color:#555;border-color:#999">Show all</span>` : '') + '</div>';
+  [1,2,3,4].forEach(l => {
+    if(curLevel && curLevel!==l) return;
+    const items = list.filter(p => p.level===l);
+    if(!items.length) return;
+    h += `<div class="lvh" style="color:${['','#0e9a46','#e08a12','#d02a33','#6b3fc9'][l]}">Level ${l} – ${LV[l].n}<small>${items.length} passages</small></div>
+          <div class="lvd">${LV[l].d}</div><div class="grid3">${items.map(passageCard).join('')}</div>`;
+  });
+  return h;
+}
+
+function showTab(){
+  buildTabs();
+  const b = $('tabBody'); let h = '';
+  const en = PASSAGES.filter(p => p.lang==='en');
+  if(curTab==='home'){ startMode='real'; startExam='cgl';
+    h = listView(en, 'Passages', 'Passages are arranged <b>level-wise</b> – start with Easy, then Medium, Hard and finally Advanced. The level depends on word length, capitals, numbers and symbols.'); }
+  else if(curTab==='practice'){ startMode='practice'; startExam='cgl';
+    h = listView(en, 'Practice', 'Pick any passage and set your own practice time. Perfect for building speed before a real exam.'); }
+  else if(EXAMS[curTab] && curTab!=='hindi'){ startMode='real'; startExam=curTab;
+    h = listView(PASSAGES.filter(p => p.exams.includes(curTab)), EXAMS[curTab].name + ' typing passages', `Mock settings: ${EXAMS[curTab].mins} minutes, up to 2000 key depressions.`); }
+  else if(curTab==='hindi'){ startMode='real'; startExam='hindi';
+    h = listView(PASSAGES.filter(p => p.lang==='hi'), 'हिंदी Typing', 'Hindi passages. Use a Hindi (Inscript) keyboard on your device to type.'); }
+  else if(curTab==='learn') h = learnView();
+  else if(curTab==='results') h = resultsView();
+  else if(curTab==='steno') h = stenoView();
+  b.innerHTML = h;
+  b.querySelectorAll('.sbtn').forEach(x => x.onclick = () => openStart(+x.dataset.p));
+  b.querySelectorAll('.lc').forEach(x => x.onclick = () => { curLevel = +x.dataset.l === curLevel ? 0 : +x.dataset.l; showTab(); });
+  if(curTab==='results'){ const c = $('clrBtn'); if(c) c.onclick = () => { localStorage.removeItem('tm_results'); showTab(); }; }
+  if(curTab==='steno') bindSteno();
+}
+
+/* ---------- Learn ---------- */
+function learnView(){
+  return `<h2>Learn</h2><div class="sub">Quick tips to type faster with fewer mistakes.</div>
+  <div class="infocard"><h3>1. Posture &amp; hands</h3><ul><li>Sit straight, wrists level, screen at eye height.</li><li>Keep your fingers on the home row (A S D F – J K L ;) and return after every key.</li></ul></div>
+  <div class="infocard"><h3>2. Accuracy before speed</h3><ul><li>A full mistake is a missing, wrong, extra or incomplete word – so a slow, clean run beats a fast, messy one.</li><li>Type exactly as given: capitals, punctuation, numbers and one space after punctuation.</li></ul></div>
+  <div class="infocard"><h3>3. Daily routine</h3><ul><li>Start with Level 1 passages, then move up one level once your mistakes stay under the limit.</li><li>Practise with exam-hall noise on, so the real centre does not distract you.</li><li>Always use the last two minutes to read your text and fix errors.</li></ul></div>
+  <div class="infocard"><h3>4. Key depressions</h3><ul><li>Every key you press, including Backspace, counts towards the 2000 limit. Don't waste keys on unnecessary corrections.</li></ul></div>`;
+}
+
+/* ---------- My results ---------- */
+function getResults(){ try{ return JSON.parse(localStorage.getItem('tm_results')||'[]'); }catch(e){ return []; } }
+function saveResult(r){ try{ const a = getResults(); a.unshift(r); localStorage.setItem('tm_results', JSON.stringify(a.slice(0,50))); }catch(e){} }
+function resultsView(){
+  const a = getResults();
+  if(!a.length) return `<h2>My results</h2><div class="empty">You haven't taken any test yet. Your results will appear here.</div>`;
+  return `<h2>My results</h2><div class="sub">Saved in this browser only.</div>
+  <div style="overflow-x:auto"><table><tr><th>Date</th><th>Passage</th><th>Exam</th><th>WPM</th><th>Mistakes</th><th>Result</th></tr>` +
+  a.map(r => `<tr><td>${esc(r.date)}</td><td>${esc(r.title)}</td><td>${esc(r.exam)}</td><td>${r.wpm}</td><td>${r.pct}%</td><td class="${r.ok?'pass':'fail'}">${r.ok?'Qualified':'Not qualified'}</td></tr>`).join('') +
+  `</table></div><button class="sbtn" id="clrBtn" style="margin-top:12px;background:#c0262d">Clear results</button>`;
+}
+
+/* ---------- Steno dictation ---------- */
+function stenoView(){
+  const en = PASSAGES.filter(p => p.lang==='en');
+  return `<h2>Steno Dictation</h2><div class="sub">Press Play, listen to the passage read aloud at your chosen speed, type what you hear, then press Check.</div>
+  <div class="infocard">
+    <select class="sm" id="stP">${en.map(p => `<option value="${p.id}">Passage ${p.id} – ${esc(p.title)}</option>`).join('')}</select>
+    <select class="sm" id="stS"><option value="60">60 wpm</option><option value="80" selected>80 wpm</option><option value="100">100 wpm</option><option value="120">120 wpm</option></select>
+    <button class="sbtn" id="stPlay">▶ Play</button> <button class="sbtn" id="stStop" style="background:#c0262d">■ Stop</button>
+    <textarea class="ta" id="stT" placeholder="Type what you hear…" spellcheck="false"></textarea>
+    <button class="sbtn" id="stCheck">Check</button>
+    <div id="stRes" style="margin-top:10px;font-size:13px"></div>
+  </div>`;
+}
+function bindSteno(){
+  const get = () => PASSAGES.find(p => p.id === +$('stP').value);
+  $('stPlay').onclick = () => {
+    if(!('speechSynthesis' in window)){ $('stRes').textContent = 'Speech is not supported in this browser.'; return; }
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(get().text); u.lang = 'en-IN'; u.rate = +$('stS').value/150;
+    speechSynthesis.speak(u);
+  };
+  $('stStop').onclick = () => speechSynthesis.cancel();
+  $('stCheck').onclick = () => {
+    const o = words(get().text), m = words($('stT').value), x = mistakes(o,m), pct = (x/o.length*100).toFixed(2);
+    $('stRes').innerHTML = `Words typed: <b>${m.length}</b> of ${o.length} · Full mistakes: <b>${x}</b> · Mistake %: <b>${pct}%</b>`;
+  };
+}
+
+/* ============================================================
+   START PAGE
+   ============================================================ */
+let cur = null;
+function openStart(pid){
+  cur = PASSAGES.find(p => p.id === pid);
+  const w = words(cur.text).length;
+  $('sTitle').textContent = `${cur.lang==='hi'?'Hindi':'Typing'} Test – Passage ${cur.id}: ${cur.title}`;
+  const ex = cur.lang==='hi' ? ['hindi'] : cur.exams.filter(e => EXAMS[e]);
+  $('exam').innerHTML = ex.map(e => `<option value="${e}">${EXAMS[e].name}</option>`).join('');
+  $('exam').value = ex.includes(startExam) ? startExam : ex[0];
+  fillPosts();
+  document.querySelectorAll('.mode').forEach(m => m.classList.toggle('sel', m.dataset.m===startMode));
+  document.querySelector(`input[name=mode][value=${startMode}]`).checked = true;
+  $('pbox').classList.toggle('hidden', startMode!=='practice');
+  $('home').classList.add('hidden'); $('start').classList.remove('hidden'); window.scrollTo(0,0);
+}
+function fillPosts(){
+  const e = EXAMS[$('exam').value];
+  $('post').innerHTML = e.posts.map(p => `<option value="${p.id}">${p.label}</option>`).join('');
+  $('limitsBox').innerHTML = e.posts.map(p => `${p.label.split(' – ')[0]}: UR ${p.limits.UR}% · OBC/EWS ${p.limits.OBC}% · SC/ST ${p.limits.SC}% · PwD ${p.limits.PwD}%`).join('<br>');
+  const w = words(cur.text).length;
+  $('sChips').innerHTML = [`2000 key depressions`, `${e.mins} minutes`, `Level: ${LV[cur.level].n}`, 'Single paragraph', `${w} words`].map(c => `<span class="chip">${c}</span>`).join('');
+}
+$('exam').onchange = fillPosts;
+$('backBtn').onclick = () => { stopNoise(); $('start').classList.add('hidden'); $('home').classList.remove('hidden'); };
+document.querySelectorAll('.mode').forEach(m => m.addEventListener('click', () => {
+  document.querySelectorAll('.mode').forEach(x => x.classList.remove('sel'));
+  m.classList.add('sel'); m.querySelector('input').checked = true;
+  $('pbox').classList.toggle('hidden', m.dataset.m!=='practice');
+}));
+
+/* ============================================================
+   SOUNDS
+   ============================================================ */
+let ac, noiseTimer = null;
+function ctx(){
+  if(!ac) ac = new (window.AudioContext||window.webkitAudioContext)();
+  if(ac.state === 'suspended') ac.resume();
+  return ac;
+}
+function keyTick(vol, pitch){
+  const c = ctx(), t = c.currentTime, n = Math.floor(c.sampleRate*0.035);
+  const buf = c.createBuffer(1,n,c.sampleRate), d = buf.getChannelData(0);
+  for(let i=0;i<n;i++) d[i] = (Math.random()*2-1) * Math.pow(1-i/n,3);
+  const src = c.createBufferSource(); src.buffer = buf;
+  const f = c.createBiquadFilter(); f.type='bandpass'; f.frequency.value = pitch||2200; f.Q.value = 0.8;
+  const g = c.createGain(); g.gain.value = vol;
+  src.connect(f).connect(g).connect(c.destination); src.start(t);
+  const o = c.createOscillator(), og = c.createGain();
+  o.type='sine'; o.frequency.setValueAtTime(180,t); o.frequency.exponentialRampToValueAtTime(70,t+.04);
+  og.gain.setValueAtTime(vol*0.6,t); og.gain.exponentialRampToValueAtTime(.001,t+.05);
+  o.connect(og).connect(c.destination); o.start(t); o.stop(t+.06);
+}
+function startNoise(){
+  stopNoise();
+  const loop = () => {
+    const v = $('vol').value/100;
+    const burst = 1 + Math.floor(Math.random()*3);
+    for(let i=0;i<burst;i++) setTimeout(() => keyTick(v*0.35*(0.5+Math.random()*0.7), 1500+Math.random()*1800), i*Math.random()*70);
+    noiseTimer = setTimeout(loop, 40 + Math.random()*110);
+  };
+  loop();
+}
+function stopNoise(){ if(noiseTimer){ clearTimeout(noiseTimer); noiseTimer = null; } }
+function click(){ keyTick(0.5, 2600); }
+$('tsound').onclick = () => { ctx(); startNoise(); if($('ksound').checked) click(); setTimeout(() => { if($('test').classList.contains('hidden')) stopNoise(); },2500); };
+$('ksound').addEventListener('change', e => { if(e.target.checked) click(); });
+$('noise').addEventListener('change', e => {
+  if(e.target.checked){ startNoise(); setTimeout(() => { if($('test').classList.contains('hidden')) stopNoise(); },2500); }
+  else stopNoise();
+});
+$('vol').oninput = () => {};
+
+/* ============================================================
+   TEST
+   ============================================================ */
+let left = 900, totalSecs = 900, tick, keys = 0, bsCount = 0, done = false, kdFlag = false, lastLen = 0, lastR = null, cntUn = true;
+const typed = $('typed');
+
+$('startBtn').onclick = () => {
+  ctx();
+  const mode = document.querySelector('input[name=mode]:checked').value;
+  const e = EXAMS[$('exam').value];
+  totalSecs = left = (mode==='practice' ? +$('pmins').value : e.mins) * 60;
+  $('timer').textContent = String(Math.floor(left/60)).padStart(2,'0') + ':00';
+  $('tExam').textContent = e.name + ' – Typing';
+  const hi = cur.lang==='hi';
+  $('tLang').textContent = hi ? 'Hindi' : 'English (US)';
+  $('kbLang').textContent = 'Language:' + (hi ? 'Hindi' : 'English');
+  $('passage').textContent = cur.text; $('passage').scrollTop = 0;
+  $('start').classList.add('hidden'); $('test').classList.remove('hidden');
+  stopNoise(); if($('noise').checked) startNoise();
+  typed.focus();
+  tick = setInterval(() => {
+    left--; const m = String(Math.floor(left/60)).padStart(2,'0'), s = String(left%60).padStart(2,'0');
+    $('timer').textContent = m+':'+s;
+    if(left<=0) finish();
+  },1000);
+};
+
+['paste','copy','cut','drop','contextmenu'].forEach(ev => typed.addEventListener(ev, e => e.preventDefault()));
+typed.addEventListener('keydown', e => {
+  if(e.key==='Enter' || e.key==='Tab'){ e.preventDefault(); return; }
+  if((e.ctrlKey||e.metaKey) && ['v','c','x'].includes(e.key.toLowerCase())){ e.preventDefault(); return; }
+  if(e.key.length===1 || e.key==='Backspace' || e.key==='Delete'){
+    if(keys >= 2000){ e.preventDefault(); return; }
+    keys++; kdFlag = true; $('kd').textContent = keys;
+    if(e.key==='Backspace') bsCount++;
+    if($('ksound').checked) click();
+  }
+});
+typed.addEventListener('input', () => {
+  typed.value = typed.value.replace(/[\r\n\t]/g,' ');
+  const len = typed.value.length;
+  if(kdFlag){ kdFlag = false; }
+  else if(len !== lastLen && keys < 2000){ keys++; $('kd').textContent = keys; if($('ksound').checked) click(); }
+  lastLen = len;
+});
+$('submitBtn').onclick = () => finish();
+
+function mistakes(a,b){
+  const m=a.length,n=b.length, dp=Array.from({length:m+1},()=>new Array(n+1).fill(0));
+  for(let i=0;i<=m;i++) dp[i][0]=i; for(let j=0;j<=n;j++) dp[0][j]=j;
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++)
+    dp[i][j]=Math.min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  return dp[m][n];
+}
+/* ---------- word alignment: correct / half / wrong / omitted / extra / not reached ---------- */
+const nrm = w => w.toLowerCase().replace(/[^\p{L}\p{M}\p{N}]/gu,'');
+const sc = (x,y) => x===y ? 0 : (nrm(x)!=='' && nrm(x)===nrm(y) ? 0.5 : 1);   // 0.5 = half mistake (case / punctuation)
+function align(a,b){
+  const m=a.length, n=b.length, dp=Array.from({length:m+1},()=>new Array(n+1).fill(0));
+  for(let i=0;i<=m;i++) dp[i][0]=i; for(let j=0;j<=n;j++) dp[0][j]=j;
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++)
+    dp[i][j]=Math.min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+sc(a[i-1],b[j-1]));
+  let bi=0, best=Infinity;
+  for(let i=0;i<=m;i++) if(dp[i][n]<=best){ best=dp[i][n]; bi=i; }
+  let i=bi, j=n; const c={correct:0,half:0,wrong:0,omit:0,extra:0};
+  while(i>0||j>0){
+    if(i>0&&j>0&&Math.abs(dp[i][j]-(dp[i-1][j-1]+sc(a[i-1],b[j-1])))<1e-9){
+      const s=sc(a[i-1],b[j-1]); if(s===0)c.correct++; else if(s===0.5)c.half++; else c.wrong++; i--; j--;
+    } else if(i>0&&Math.abs(dp[i][j]-(dp[i-1][j]+1))<1e-9){ c.omit++; i--; }
+    else { c.extra++; j--; }
+  }
+  return {...c, reached:bi, unreached:m-bi};
+}
+
+/* ---------- detailed result page ---------- */
+const CATS = [['UR','UR'],['OBC','OBC'],['EWS','OBC'],['SC','SC'],['ST','SC'],['ESM','OBC'],['OH','PwD'],['HH','PwD'],['VH','PwD'],['PwD-Others','PwD']];
+const SELCAT = {UR:'UR',OBC:'OBC',SC:'SC',PwD:'PwD-Others'};
+const OTHER = [
+ ['SSC CGL DEST (DEST posts)','8,000 KDPH (27 WPM)',8000,5,'5%'],
+ ['SSC CHSL LDC/JSA','10,500 KDPH (35 WPM)',10500,7,'7%'],
+ ['SSC CHSL DEO','8,000 KDPH (27 WPM)',8000,5,'5%'],
+ ['RRB NTPC CBTST (English)','30 WPM net',9000,5,'5% + 10-word rule'],
+ ['DSSSB JA/LDC (English)','35 WPM net',10500,5,'5% + 10-word rule'],
+ ['KVS JSA (English, CBSE pattern)','35 WPM net',10500,null,'5 words per mistake'],
+ ['NVS JSA (English, CBSE pattern)','30 WPM net',9000,null,'5 words per mistake'],
+ ['State clerk tests (English, usual)','30-35 WPM',9000,null,'–']];
+const mmss = s => String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+const num = n => Number(n).toLocaleString('en-IN');
+
+function renderResult(){
+  const r = lastR, A = r.A;
+  const full = A.wrong + A.omit + A.extra, half = A.half;
+  const typedErr = full + half/2;
+  const errTyped = A.reached ? typedErr/A.reached*100 : 0;
+  const mistTotal = typedErr + (cntUn ? A.unreached : 0);
+  const pct = cntUn ? mistTotal/r.orig*100 : errTyped;
+  const hrs = Math.max(r.used,1)/3600, mins = Math.max(r.used,1)/60;
+  const grossK = Math.round(r.keys/hrs), netK = Math.round(r.typedChars/hrs);
+  const grossW = Math.round(grossK/300), netW = Math.round(netK/300);
+  const rrbW = Math.round(A.correct/mins);
+  const has = r.typedWords > 0;
+  const needed = r.post.kdph || 0;
+  const ok = has && pct <= r.allowed && (!needed || netK >= needed);
+  const acc = A.reached ? Math.max(0,100-errTyped) : 0;
+  const comp = Math.min(100, r.keys/2000*100);
+  const speedPct = needed ? Math.min(100, netK/needed*100) : 100;
+  const d = new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const f = n => (Math.round(n*100)/100);
+
+  const tiles = r.exam.posts.map(p => `
+    <div style="font-size:12px;font-weight:bold;margin:10px 0 6px">${esc(p.label)}</div>
+    <div class="tiles">${CATS.map(([lab,key]) => {
+      const lim = p.limits[key], pass = has && pct <= lim && (!p.kdph || netK >= p.kdph);
+      return `<div class="tile ${pass?'p':''} ${SELCAT[r.cat]===lab?'sel':''}">${lab}<br><span class="${pass?'ok2':'no2'}">${pass?'✓':'✗'}</span><small>limit ${lim}%</small></div>`;
+    }).join('')}</div>`).join('');
+
+  const rows = OTHER.map(o => {
+    const pass = has && netK >= o[2] && (o[3]===null || pct <= o[3]);
+    return `<tr><td>${o[0]}</td><td>${o[1]}</td><td>${o[4]}</td><td class="${pass?'ok2':'no2'}">${pass?'✓ Pass':'✗ Not yet'}</td></tr>`;
+  }).join('');
+
+  $('resBody').innerHTML = `
+  <div class="rhero ${ok?'ok':''}">
+    <div class="ring"><b>${f(pct)}</b><small>error %<br>(limit ${r.allowed}%)</small></div>
+    <div class="rtxt">
+      <div class="k">RESULT · ${ok?'QUALIFIED':'NOT QUALIFIED'}</div>
+      <h2>${ok?'Well done – you qualified!':'Keep practising – you can do it.'}</h2>
+      <div class="s">${esc(r.exam.name)} · Passage ${r.pid} · ${esc(r.cat)} · ${esc(r.post.label)}</div>
+      <div class="pills"><span>⏱ ${mmss(r.used)} of ${mmss(r.total)}</span><span>⌨ ${r.keys} / 2000 KDs</span><span>SSC method</span><span>📅 ${d}</span></div>
+    </div>
+  </div>
+
+  <div class="scards">
+    <div class="sc"><div class="h">⚡ SPEED</div><div class="v">${num(netK)}</div>key depressions per hour · ${netW} WPM
+      <div class="bar k"><i style="width:${speedPct}%"></i></div>${needed?`Needed: ${num(needed)} KDPH`:'No speed limit for this post'}</div>
+    <div class="sc"><div class="h">🎯 ACCURACY</div><div class="v">${f(acc)}%</div>of the words you typed · ${A.reached} of ${r.orig} words reached
+      <div class="bar"><i style="width:${acc}%"></i></div>Error in the part you typed: ${f(errTyped)}%</div>
+    <div class="sc"><div class="h">📄 COMPLETION</div><div class="v">${Math.round(comp)}%</div>${r.keys} of 2000 key depressions
+      <div class="bar"><i style="width:${comp}%"></i></div>Finish the passage to avoid untyped words</div>
+    <div class="sc"><div class="h">✍ MISTAKES</div><div class="v">${f(mistTotal)}</div>${full} full + ${half} half + ${cntUn?A.unreached:0} untyped
+      <div class="bar g"><i style="width:${Math.min(100,pct)}%"></i></div>Error % = (full + half ÷ 2 ${cntUn?'+ untyped':''}) ÷ ${cntUn?r.orig:A.reached} words</div>
+  </div>
+
+  <div class="panel"><h3>📋 Typing details</h3><div class="kv">
+    <div>Test duration : <b>${mmss(r.used)} min</b></div><div>Total words typed : <b>${r.typedWords}</b></div>
+    <div>Correct words : <b>${A.correct}</b></div><div>Wrong words : <b>${A.wrong}</b></div>
+    <div>Omitted (skipped) words : <b>${A.omit}</b></div><div>Extra words : <b>${A.extra}</b></div>
+    <div>Half mistakes : <b>${half}</b></div><div>Words not reached : <b>${A.unreached}</b></div>
+  </div></div>
+
+  <div class="panel"><h3>⚡ Speed details</h3><div class="kv">
+    <div>Net speed : <b>${netW} WPM · ${Math.round(netK/60)} keys/min (${num(netK)} KDPH)</b></div>
+    <div>Gross speed : <b>${grossW} WPM · ${Math.round(grossK/60)} keys/min (${num(grossK)} KDPH)</b></div>
+    <div>Backspace used : <b>${r.bs} times</b></div><div>Accuracy : <b>${f(acc)}%</b></div>
+    <div>Error % (typed part) : <b>${f(errTyped)}%</b></div><div>Error % (SSC method) : <b>${f((typedErr + A.unreached)/r.orig*100)}%</b></div>
+  </div></div>
+
+  <div class="panel"><h3>🏛 Same typing in other exams</h3>
+    <div style="overflow-x:auto"><table><tr><th>Exam</th><th>Speed needed</th><th>Error limit (UR)</th><th>You</th></tr>${rows}</table></div>
+    <p style="font-size:11px;color:#667;line-height:1.5">Your speed here: ${num(netK)} KDPH (gross ${grossW} WPM), error ${f(errTyped)}% in the part you typed. Net speed by the RRB / HCM rule: ${rrbW} WPM. Requirements shown are for practice only – check your own notification for the real rules.</p>
+  </div>
+
+  <label style="display:flex;gap:8px;align-items:flex-start;font-size:12px;margin:4px 2px 12px"><input type="checkbox" id="cntUn" ${cntUn?'checked':''}> Count the words I did not reach as mistakes (SSC treats every omitted word as a full mistake)</label>
+
+  <div class="panel"><h3>🧾 Mistake summary</h3>
+    <div style="font-size:12px"><span class="dot" style="background:#d02a33"></span>Full mistakes: <b>${full}</b> &nbsp; <span class="dot" style="background:#e08a12"></span>Half mistakes: <b>${half}</b> &nbsp; <span class="dot" style="background:#9aa0b5"></span>Words not reached: <b>${A.unreached}</b></div>
+    ${(full+half)===0 && has ? '<div class="chip" style="display:inline-block;margin-top:8px">No mistakes in what you typed 🎉</div>' : ''}
+  </div>
+
+  <div class="panel"><h3>🏷 Qualifying status for every category</h3>${tiles}</div>
+  <button class="start" onclick="location.reload()">Back to passages</button>`;
+  return {pct, ok, wpm:netW, allowed:r.allowed};
+}
+document.addEventListener('change', e => { if(e.target.id==='cntUn' && lastR){ cntUn = e.target.checked; renderResult(); } });
+
+function finish(){
+  if(done) return; done = true; clearInterval(tick); stopNoise();
+  const orig = words(cur.text), mine = words(typed.value);
+  const exam = EXAMS[$('exam').value];
+  const post = exam.posts.find(p => p.id === $('post').value);
+  const allowed = post.limits[$('cat').value];
+  const used = totalSecs - Math.max(left,0);
+  lastR = {A:align(orig, mine), orig:orig.length, typedWords:mine.length, typedChars:typed.value.length,
+           keys, bs:bsCount, used, post, exam, allowed, pid:cur.id, cat:$('cat').value, total:totalSecs};
+  const R = renderResult();
+  const pct = R.pct, ok = R.ok, wpm = R.wpm;
+  saveResult({date:new Date().toLocaleString(), title:`Passage ${cur.id}`, exam:exam.name, wpm, pct:pct.toFixed(2), ok});
+  $('test').classList.add('hidden'); $('result').classList.remove('hidden'); window.scrollTo(0,0);
+  $('popTitle').textContent = ok ? 'Congratulations! 🎉' : 'Congratulations on finishing! 🎉';
+  $('popMsg').textContent = ok
+    ? `You cleared the test with ${pct.toFixed(2)}% mistakes at ${wpm} WPM.`
+    : `Test submitted. Mistakes ${pct.toFixed(2)}% (allowed ${allowed}%). Keep practising!`;
+  $('congrats').classList.remove('hidden');
+  const pop = $('popBox');
+  for(let i=0;i<26;i++){
+    const s = document.createElement('span'); s.className='conf';
+    s.textContent = ['🎉','✨','🎊','⭐'][i%4];
+    s.style.left = Math.random()*95+'%'; s.style.animationDelay = Math.random()*1.2+'s';
+    pop.appendChild(s);
+  }
+}
+window.addEventListener('beforeunload', e => { if(!done && !$('test').classList.contains('hidden')){ e.preventDefault(); e.returnValue=''; }});
+
+showTab();
+</script>
+</body>
+</html>
